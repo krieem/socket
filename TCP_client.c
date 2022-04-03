@@ -1,9 +1,3 @@
-/****************
-Client side C/C++ program to demonstrate Socket programming
-The client connects to the server for TCP communications
- by Glen Tian on 27 May 2021
- Modified by Glen Tian on 29 Aug 2021
-****************/
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>

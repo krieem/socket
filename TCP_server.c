@@ -91,15 +91,17 @@ int main(int argc, char const *argv[]){
       exit(EXIT_FAILURE);
     }
     printf("%2d Sent:     %s\n",i,hello);
-    time_t sent_time = time(NULL);
+    time_t sent_time = time(NULL); /* time stamp when sending the package */
 
     if ((recv(acptdsock,buffer,BUFLEN-1,0)) == -1)
       perror("recv() failed ");
     buffer[BUFLEN-1]=0x00;  /* force ending with '\0' */
     printf("   Received: %s\n",buffer);
-    time_t recv_time = time(NULL);
-    double diff_time = difftime(sent_time, recv_time);
-    printf("DiffTime: %f/n", diff_time);
+
+    time_t recv_time = time(NULL); /* time stamp when recv the package */ 
+
+    double diff_time = difftime(sent_time, recv_time); 
+    printf("DiffTime: %f/n", diff_time); /* diff calculation between sent and recv */ 
 
     if ((++i) == LOOPLIMIT) /* LOOPLIMIT reached  */
       break;
