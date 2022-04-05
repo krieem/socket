@@ -8,12 +8,11 @@
 #include <netinet/in.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
-
 #define PORT 8886    /* port number */
 #define BUFLEN 1024  /* buffer length */
-#define PERIOD 1     /* in seconds */
+#define PERIOD 3     /* in seconds */
 #define LOOPLIMIT 10 /* loop testing send()/recv() */
-#define QUITKEY 0x1b /* ASCII code of ESC */
+#define QUITKEY 0x65 /* ASCII code of 'e' */
 
 int kbhit(void){
     static bool initflag = false;
@@ -38,7 +37,7 @@ int main(int argc, char const *argv[]){
   struct sockaddr_in servaddr;
   int addrlen = sizeof(servaddr);
   char buffer[BUFLEN] = {0};
-  char *hello = "Hello from the server";
+  char *reqst = "R";
   char cmd = QUITKEY;   /* character ESC */
   bool stop = false; /* stop running  */
 
@@ -84,13 +83,16 @@ int main(int argc, char const *argv[]){
     exit(EXIT_FAILURE);
   }
 
+  
+  
   while (1) { /* loop for send()/recv() */
-    if ((send(acptdsock, hello, strlen(hello) , 0 )) == -1){
+    if ((send(acptdsock, reqst, strlen(reqst) , 0 )) == -1){
       perror("send() failed ");
       close(sockfd);
       exit(EXIT_FAILURE);
     }
-    printf("%2d Sent:     %s\n",i,hello);
+
+    printf("%2d Sent:     %s\n",i,reqst);
     time_t sent_time = time(NULL); /* time stamp when sending the package */
 
     if ((recv(acptdsock,buffer,BUFLEN-1,0)) == -1)
@@ -102,6 +104,10 @@ int main(int argc, char const *argv[]){
 
     double diff_time = difftime(sent_time, recv_time); 
     printf("DiffTime: %f/n", diff_time); /* diff calculation between sent and recv */ 
+
+
+
+
 
     if ((++i) == LOOPLIMIT) /* LOOPLIMIT reached  */
       break;

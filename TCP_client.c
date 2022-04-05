@@ -4,17 +4,30 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <sys/time.h>
 #define SERVIPADDRESS "127.0.0.1" /* loopback for testing */
 #define SERVPORT 8886             /* port number */
 #define BUFLEN 1024               /* buffer length */
-#define QUITKEY 0x1b /* ASCII code of ESC */
+#define QUITKEY 0x65 /* ASCII code of ESC */
+
+long long current_timestamp() {
+    struct timeval te; 
+    gettimeofday(&te, NULL); // get current time
+    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
+    // printf("milliseconds: %lld\n", milliseconds);
+    return milliseconds;
+  }
 
 int main(int argc, char const *argv[]){
+    time_t now =time(NULL);
     int sockfd = 0, i=0;
     struct sockaddr_in serv_addr;
     char buffer[BUFLEN] = {0};
-    char *ackmsg = "ACK from client";
-
+    int tm_milsec = current_timestamp();
+    struct tm *send_time;
+    char *ackmsg = "ACK from client local time";
+    char requts = 'R';
+    char *string_now = ctime(&now);
     if ((sockfd = socket(AF_INET,SOCK_STREAM,0)) == -1) {
         perror("Socket creation error \n");
         exit(EXIT_FAILURE);
@@ -37,8 +50,14 @@ int main(int argc, char const *argv[]){
       buffer[BUFLEN-1] = 0x00;    /* force ending with '\0' */
       if (buffer[0] == QUITKEY)   /* prepare termination */
         break;
-      printf("%2d Received: %s\n",i++,buffer);
+      struct tm *send_time = localtime(&now);
+      printf("%d",tm_milsec);
+      if (buffer[0] == requts)
+      printf("%2d Request Received...\n",i++);
+      else
+      printf("%2d Received: Uknowing request",i++);
 
+      
       if ((send(sockfd,ackmsg,strlen(ackmsg),0)) == -1){
         perror("send failed ");
         close(sockfd);
