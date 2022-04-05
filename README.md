@@ -10,7 +10,7 @@
 3) After receiving the command from the Server, the Client responds to the Server with an ACK message consisting of:
 
 
-~~a) A string “ACK at” ~~followed by a timestamp. The timestamp has the format hh:mm:ss:ddd, meaning two digits (hh) for hours, two digits (mm) for minutes, two digits (ss) for seconds, and three digits (ddd) for milliseconds (For example, 18:03:54:793, in which 793 means 793 ms); and
+~~a) A string “ACK at”~~ followed by a timestamp. The timestamp has the format hh:mm:ss:ddd, meaning two digits (hh) for hours, two digits (mm) for minutes, two digits (ss) for seconds, and three digits (ddd) for milliseconds (For example, 18:03:54:793, in which 793 means 793 ms); and
 
 b) A random integer in [0, 1000] with a uniform distribution. The Client may also display some useful information on its monitor. You may use a random generator function (available from C library) to generate such random numbers.
 
