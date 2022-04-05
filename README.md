@@ -17,7 +17,7 @@ b) A random integer in [0, 1000] with a uniform distribution. The Client may als
 4) The Server gets the ACK message from the Client, and calculates the round trip time (RTT) from its communications with the Client, and displays the result on its monitor. If you use the same computer to test the Server and Client programs, or if the Server and Client are very close, the RTT may be less than 1 ms. In this case, you will need a higher time resolution, e.g., in microseconds or even sub-microseconds.
 
 
-5) Without interruptions to the client-server communication, the Server reads keyboard input of various commands or instructions. An obvious command is to terminate the Server program, e.g., using a single letter ‘E’ or ‘e’ (exit) for termination. A three-way handshaking is required for terminating the client-server system:
+~~5) Without interruptions to the client-server communication, the Server reads keyboard input of various commands or instructions. An obvious command is to terminate the Server program, e.g., using a single letter ‘E’ or ‘e’ (exit) for termination. A three-way handshaking is required for terminating the client-server system:~~
 
 
 i) When the Sever is to be terminated, it should notify the Client of the Server’s intention of termination so that the Client also terminates properly.
