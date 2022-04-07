@@ -31,7 +31,6 @@ int kbhit(void){
     return nbbytes;
 }
 
-
 int main(int argc, char const *argv[]){
   int sockfd, acptdsock, optv=1,i=0;
   struct sockaddr_in servaddr;
@@ -41,20 +40,8 @@ int main(int argc, char const *argv[]){
   char cmd = QUITKEY;   /* character ESC */
   bool stop = false; /* stop running  */
 
-  
   if ((sockfd = socket(AF_INET,SOCK_STREAM,0)) == -1){
     perror("socket failed");
-    exit(EXIT_FAILURE);
-  }
-
-  if (setsockopt(sockfd,SOL_SOCKET,SO_REUSEADDR,
-      &optv,sizeof(optv))){
-    perror("setsockopt SO_REUSEADDR failed");
-    exit(EXIT_FAILURE);
-  }
-  if (setsockopt(sockfd,SOL_SOCKET,SO_REUSEPORT,
-      &optv,sizeof(optv))){
-    perror("setsockopt SO_REUSEPORT failed");
     exit(EXIT_FAILURE);
   }
 
@@ -83,8 +70,6 @@ int main(int argc, char const *argv[]){
     exit(EXIT_FAILURE);
   }
 
-  
-  
   while (1) { /* loop for send()/recv() */
     if ((send(acptdsock, reqst, strlen(reqst) , 0 )) == -1){
       perror("send() failed ");
@@ -93,21 +78,11 @@ int main(int argc, char const *argv[]){
     }
 
     printf("%2d Sent:     %s\n",i,reqst);
-    time_t sent_time = time(NULL); /* time stamp when sending the package */
 
     if ((recv(acptdsock,buffer,BUFLEN-1,0)) == -1)
       perror("recv() failed ");
     buffer[BUFLEN-1]=0x00;  /* force ending with '\0' */
     printf("   Received: %s\n",buffer);
-
-    time_t recv_time = time(NULL); /* time stamp when recv the package */ 
-
-    double diff_time = difftime(sent_time, recv_time); 
-    printf("DiffTime: %f/n", diff_time); /* diff calculation between sent and recv */ 
-
-
-
-
 
     if ((++i) == LOOPLIMIT) /* LOOPLIMIT reached  */
       break;
