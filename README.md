@@ -27,4 +27,4 @@ iii) Then, the Server informs the Client of the receipt of the ‘O’ or ‘o�
 
 After this three-way handshaking, both the Server and Client are safe to terminate.
 
-Thank you
+Thank you...
