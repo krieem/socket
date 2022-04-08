@@ -26,3 +26,5 @@ ii) When the Client receives the single letter ‘E’ or ‘e’ (exit) from th
 iii) Then, the Server informs the Client of the receipt of the ‘O’ or ‘o’ command.
 
 After this three-way handshaking, both the Server and Client are safe to terminate.
+
+Thank you
