@@ -34,11 +34,15 @@ int kbhit(void){
 int main(int argc, char const *argv[]){
   int sockfd, acptdsock, optv=1,i=0;
   struct sockaddr_in servaddr;
+  struct timeval curTime;
   int addrlen = sizeof(servaddr);
+  int diff;
   char buffer[BUFLEN] = {0};
   char *reqst = "R";
+  char *endCom = "E";
   char cmd = QUITKEY;   /* character ESC */
   bool stop = false; /* stop running  */
+
 
   if ((sockfd = socket(AF_INET,SOCK_STREAM,0)) == -1){
     perror("socket failed");
@@ -76,13 +80,26 @@ int main(int argc, char const *argv[]){
       close(sockfd);
       exit(EXIT_FAILURE);
     }
+    gettimeofday(&curTime, NULL);
+    int sntmilli = curTime.tv_usec / 1000;
+    char sentTime[4] = "";
+    sprintf(sentTime, "%03d", sntmilli);
 
-    printf("%2d Sent:     %s\n",i,reqst);
+    printf("%2d Sending request to the client: %s\n",i,reqst);
 
     if ((recv(acptdsock,buffer,BUFLEN-1,0)) == -1)
       perror("recv() failed ");
-    buffer[BUFLEN-1]=0x00;  /* force ending with '\0' */
-    printf("   Received: %s\n",buffer);
+      buffer[BUFLEN-1]=0x00;  /* force ending with '\0' */
+      printf("   Message from the client: %s\n",buffer);
+      gettimeofday(&curTime, NULL);
+      int revmilli = curTime.tv_usec / 1000;
+      char rcvTime[4] = "";
+      sprintf(rcvTime, "%03d", revmilli);
+      if( revmilli>sntmilli )
+        diff=revmilli-sntmilli;
+    else
+        diff=sntmilli-revmilli;
+      printf("   Round trip time: %3d Millisecond \n \n", diff );
 
     if ((++i) == LOOPLIMIT) /* LOOPLIMIT reached  */
       break;
@@ -91,6 +108,12 @@ int main(int argc, char const *argv[]){
       cmd = getchar();
       fflush(stdout);
       if (cmd == QUITKEY)
+        sleep(1);
+        send(acptdsock, endCom, strlen(endCom) , 0 );
+        printf("Termination request has been sent to the client!\n");
+        char bufferEnd[BUFLEN] = {0};
+        recv(acptdsock,bufferEnd,BUFLEN-1,0);
+        printf("Client terminated: %s \n",bufferEnd);
         stop = true;
     }
     if (stop)
@@ -109,6 +132,6 @@ int main(int argc, char const *argv[]){
     perror("close socket failed ");
     exit(EXIT_FAILURE);
   }
-  printf("....Server retuned!\n\n");
+  printf("Server terminated!\n");
   return 0; /* with success */
 }
