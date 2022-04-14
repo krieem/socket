@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include <sys/time.h>
 #define SERVIPADDRESS "127.0.0.1" /* loopback for testing */
-#define SERVPORT 8886             /* port number */
+#define SERVPORT 4688             /* port number */
 #define BUFLEN 1024               /* buffer length */
 #define QUITKEY 0x65 /* ASCII code of ESC */
 
@@ -19,7 +19,6 @@ long long current_timestamp() {
   }
 
 int main(int argc, char const *argv[]){
-    time_t now =time(NULL);
     int sockfd = 0, i=0;
     struct sockaddr_in serv_addr;
     char buffer[BUFLEN] = {0};
@@ -74,8 +73,8 @@ int main(int argc, char const *argv[]){
         close(sockfd);
         exit(EXIT_FAILURE);
       }
-      char *dismsg = "Message has been sent successfully at ";
-      printf("%s %s:%03d \n" , dismsg, buffer, milli);
+      char *dismsg = "Message has been sent successfully at: ";
+      printf("%s %s:%03d\n\n" , dismsg, buffer, milli);
     } /* end of while loop */
 
     if (close(sockfd) == -1){

@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
-#define PORT 8886    /* port number */
+#define PORT 4688    /* port number */
 #define BUFLEN 1024  /* buffer length */
 #define PERIOD 3     /* in seconds */
 #define LOOPLIMIT 10 /* loop testing send()/recv() */
@@ -74,7 +74,8 @@ int main(int argc, char const *argv[]){
     exit(EXIT_FAILURE);
   }
 
-  while (1) { /* loop for send()/recv() */
+  do { /* loop for send()/recv() */
+    ++i;
     if ((send(acptdsock, reqst, strlen(reqst) , 0 )) == -1){
       perror("send() failed ");
       close(sockfd);
@@ -97,30 +98,26 @@ int main(int argc, char const *argv[]){
       sprintf(rcvTime, "%03d", revmilli);
       if( revmilli>sntmilli )
         diff=revmilli-sntmilli;
-    else
+      else
         diff=sntmilli-revmilli;
       printf("   Round trip time: %3d Millisecond \n \n", diff );
 
-    if ((++i) == LOOPLIMIT) /* LOOPLIMIT reached  */
-      break;
+      while ((kbhit()) && (!stop)){
+        cmd = getchar();
+        fflush(stdout);
+        if (cmd == QUITKEY)
+          stop = true;
+      }
+      sleep(PERIOD);
+  }
+  while (!stop);
+  send(acptdsock, endCom, strlen(endCom) , 0 );
+  printf("Termination request has been sent to the client\n\n");
+  char bufferEnd[BUFLEN] = {0};
+  recv(acptdsock,bufferEnd,BUFLEN-1,0);
+  printf("Client terminated: %s \n",bufferEnd);
 
-    while ((kbhit()) && (!stop)) {
-      cmd = getchar();
-      fflush(stdout);
-      if (cmd == QUITKEY)
-        sleep(1);
-        send(acptdsock, endCom, strlen(endCom) , 0 );
-        printf("Termination request has been sent to the client!\n");
-        char bufferEnd[BUFLEN] = {0};
-        recv(acptdsock,bufferEnd,BUFLEN-1,0);
-        printf("Client terminated: %s \n",bufferEnd);
-        stop = true;
-    }
-    if (stop)
-      break;
-
-    sleep(PERIOD); /* unsigned int sleep(unsigned int seconds) */
-  }                /* end of while loop */
+    sleep(PERIOD); /* unsigned int sleep(unsigned int seconds) */               /* end of while loop */
 
   if ((write(acptdsock, &cmd, 1)) == -1){ /* write() works */
     perror("send() failed ");
