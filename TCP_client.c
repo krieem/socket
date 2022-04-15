@@ -24,7 +24,7 @@ int main(int argc, char const *argv[]){
     char buffer[BUFLEN] = {0};
     char *requts = "R";
     char *endCom = "E";
-    char *endCon = "Ok!";
+    char *endCon = "OK!";
     struct timeval curTime;
     if ((sockfd = socket(AF_INET,SOCK_STREAM,0)) == -1) {
         perror("Socket creation error \n");
@@ -45,35 +45,33 @@ int main(int argc, char const *argv[]){
     while (1) { /* loop for send()/recv() */
       if ((recv(sockfd,buffer,BUFLEN-1,0)) == -1)
         perror("recv() failed ");
-      buffer[BUFLEN-1] = 0x00;    /* force ending with '\0' */
-      if (buffer[0] == QUITKEY)   /* prepare termination */
-        break;
 
-
-      if (strcmp(buffer, requts) == 0) {
+      if (strcmp(buffer, requts) == 0) { /* Respond to the server if R letter is received */
       printf("%2d Request from the server has been received\n",i++);
       }
-      else {
+      else {                             /* Terminate if else */
         send(sockfd, endCon,strlen (endCon),0);
         close(sockfd);
         printf("Server terminated!\n\n");
         return 0;
       }
 
+      /* Time of sending */
       gettimeofday(&curTime, NULL);
       int milli = curTime.tv_usec / 1000;
       char buffer [80];
       strftime(buffer, 80, "%H:%M:%S", localtime(&curTime.tv_sec));
       char ackmsg[84] = "";
       int randomNum = rand() % 1000;
-      sprintf (ackmsg, "%4d ACK from the client at  %s:%03d",randomNum , buffer, milli);
+      sprintf (ackmsg, "%4d ACK from the client at  %s:%03d",randomNum , buffer, milli); /* Random Number + Message + Time */
+      /* Time of sending */
 
       if ((send(sockfd, ackmsg,strlen (ackmsg),0)) == -1){
         perror("send failed ");
         close(sockfd);
         exit(EXIT_FAILURE);
       }
-      char *dismsg = "Message has been sent successfully at: ";
+      char *dismsg = "Message has been sent successfully at: "; /* Client message */
       printf("%s %s:%03d\n\n" , dismsg, buffer, milli);
     } /* end of while loop */
 

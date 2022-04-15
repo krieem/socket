@@ -38,10 +38,10 @@ int main(int argc, char const *argv[]){
   int addrlen = sizeof(servaddr);
   int diff;
   char buffer[BUFLEN] = {0};
-  char *reqst = "R";
-  char *endCom = "E";
-  char cmd = QUITKEY;   /* character ESC */
-  bool stop = false; /* stop running  */
+  char *reqst = "R";  /* Request key */
+  char *endCom = "E"; /* notfiy client key */
+  char cmd = QUITKEY;   /* termination key */
+  bool stop = false; /* end loop  */
 
 
   if ((sockfd = socket(AF_INET,SOCK_STREAM,0)) == -1){
@@ -67,10 +67,10 @@ int main(int argc, char const *argv[]){
   time_t now = time(NULL);
   char *string_time = ctime(&now);
   printf("%s", string_time);
-  printf("\nServer waiting connection....\n");
+  printf("\nWaiting for client...\n");
   if ((acptdsock=accept(sockfd,(struct sockaddr *)&servaddr,
         (socklen_t*)&addrlen)) == -1){
-    perror("accept() tried but not succeded, keep trying...");
+    perror("accept() failed! trying again...");
     exit(EXIT_FAILURE);
   }
 
@@ -92,6 +92,7 @@ int main(int argc, char const *argv[]){
       perror("recv() failed ");
       buffer[BUFLEN-1]=0x00;  /* force ending with '\0' */
       printf("   Message from the client: %s\n",buffer);
+      /* Cal RTT */
       gettimeofday(&curTime, NULL);
       int revmilli = curTime.tv_usec / 1000;
       char rcvTime[4] = "";
@@ -101,7 +102,8 @@ int main(int argc, char const *argv[]){
       else
         diff=sntmilli-revmilli;
       printf("   Round trip time: %3d Millisecond \n \n", diff );
-
+      printf("   To terminate connection safely press 'e' \n \n");
+      /* termination key */
       while ((kbhit()) && (!stop)){
         cmd = getchar();
         fflush(stdout);
