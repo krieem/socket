@@ -2,7 +2,7 @@
 
 # Documentation link here https://docs.google.com/document/d/1SLwtpYkDS_J4KrHrI6kYEclQy-jrYWt79J-GrynZbVs/edit?usp=sharing
 
-~~1) When the Server starts to run, it initializes the settings of the client-server system, e.g., IP address and port number, through (i) command window arguments, e.g., header file, arguments to main(), (ii) keyboard input, or (iii) input from a configuration file, which is a pure text file.
+1) When the Server starts to run, it initializes the settings of the client-server system, e.g., IP address and port number, through (i) command window arguments, e.g., header file, arguments to main(), (ii) keyboard input, or (iii) input from a configuration file, which is a pure text file.
 
 
 3) Every three seconds, the Server sends the Client a command, e.g., through a single letter ‘R’ or ‘r’ (request) to request data from the Client.
@@ -26,7 +26,7 @@ i) When the Sever is to be terminated, it should notify the Client of the Server
 ii) When the Client receives the single letter ‘E’ or ‘e’ (exit) from the Server, it sends back to the Server a command using a single letter ‘O’ or ‘o’ (OK).
 iii) Then, the Server informs the Client of the receipt of the ‘O’ or ‘o’ command.
 
-After this three-way handshaking, both the Server and Client are safe to terminate.~~
+After this three-way handshaking, both the Server and Client are safe to terminate.
 
 
 
