@@ -1,5 +1,6 @@
-# socket program requirements
+## socket program requirements
 
+# Documentation link here https://docs.google.com/document/d/1SLwtpYkDS_J4KrHrI6kYEclQy-jrYWt79J-GrynZbVs/edit?usp=sharing
 
 ~~1) When the Server starts to run, it initializes the settings of the client-server system, e.g., IP address and port number, through (i) command window arguments, e.g., header file, arguments to main(), (ii) keyboard input, or (iii) input from a configuration file, which is a pure text file.
 
