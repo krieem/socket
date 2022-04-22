@@ -31,6 +31,12 @@ int kbhit(void){
     return nbbytes;
 }
 
+uint64_t micro_time() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * (uint64_t)1000000 + tv.tv_usec;
+}
+
 int main(int argc, char const *argv[]){
   int sockfd, acptdsock, optv=1,i=0;
   struct sockaddr_in servaddr;
@@ -81,11 +87,7 @@ int main(int argc, char const *argv[]){
       close(sockfd);
       exit(EXIT_FAILURE);
     }
-    gettimeofday(&curTime, NULL);
-    int sntmilli = curTime.tv_usec / 1000;
-    char sentTime[4] = "";
-    sprintf(sentTime, "%03d", sntmilli);
-
+    long start = micro_time();
     printf("%2d Sending request to the client: %s\n",i,reqst);
 
     if ((recv(acptdsock,buffer,BUFLEN-1,0)) == -1)
@@ -93,15 +95,9 @@ int main(int argc, char const *argv[]){
       buffer[BUFLEN-1]=0x00;  /* force ending with '\0' */
       printf("   Message from the client: %s\n",buffer);
       /* Cal RTT */
-      gettimeofday(&curTime, NULL);
-      int revmilli = curTime.tv_usec / 1000;
-      char rcvTime[4] = "";
-      sprintf(rcvTime, "%03d", revmilli);
-      if( revmilli>sntmilli )
-        diff=revmilli-sntmilli;
-      else
-        diff=sntmilli-revmilli;
-      printf("   Round trip time: %3d Millisecond \n \n", diff );
+      long end = micro_time();
+
+      printf("   Round trip time: %.3f ms\n", (end - start) / 1000.0 );
       printf("   To terminate connection safely press 'e' \n \n");
       /* termination key */
       while ((kbhit()) && (!stop)){

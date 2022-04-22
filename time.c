@@ -6,28 +6,21 @@
 #include <arpa/inet.h>
 #include <sys/time.h>
 
-long long current_timestamp() {
-    struct timeval te; 
-    gettimeofday(&te, NULL); // get current time
-    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
-    // printf("milliseconds: %lld\n", milliseconds);
-    return milliseconds;
-  }
+
+
 
 
 int main (){
-    struct timeval curTime;
-            while(1 == 1){
-    gettimeofday(&curTime, NULL);
-    int milli = curTime.tv_usec / 1000;
-    char buffer [80];
-    strftime(buffer, 80, "%H:%M:%S", localtime(&curTime.tv_sec));
-    char currentTime[84] = "";
-    sprintf(currentTime, "%s:%03d", buffer, milli);
-    printf("%s\n", currentTime);
+    #include <sys/time.h>
 
-      char ackmsg[100] = "ACK at ";
-      strncat(ackmsg, currentTime, 90);
-      printf("%s", ackmsg);
-}
+    long start = micro_time();
+
+/*
+  do some works
+ */
+    sleep(1);
+    long end = micro_time();
+
+// print duration in miliseconds with decimals to microsecond level
+    printf("call %.3f ms\n", (end - start) / 1000.0);
 }
