@@ -174,7 +174,7 @@ struct sockaddr_in import_config() {
         error(0); //invalid config
     } 
     // Null terminate request
-    config[msgsize-2] = 0;
+    config[msgsize-1] = 0;
 
     if (inet_pton(AF_INET, config, &serv_addr.sin_addr) <= 0) {
         error(0); //invalid config
@@ -189,7 +189,7 @@ struct sockaddr_in import_config() {
         error(0); //invalid config
     } 
     // Null terminate request
-    config[msgsize-2] = 0;
+    config[msgsize-1] = 0;
 
     port_number = atoi(config);
     if (port_number == 0) {
